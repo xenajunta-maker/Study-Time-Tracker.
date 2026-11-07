@@ -60,7 +60,7 @@ study-time-tracker/
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/YOUR_USERNAME/study-time-tracker.git
+   git clone (https://github.com/xenajunta-maker/Study-Time-Tracker..git)
    ```
 2. Open the folder in IntelliJ IDEA (`File > Open`) and let Maven finish importing.
 3. Open `src/main/java/org/example/studytracker/Launcher.java`, right-click it and choose **Run 'Launcher.main()'**.
