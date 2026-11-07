@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.geometry.Insets?>
+
+<HBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.studytracker.DashboardController"
+      prefWidth="1000" prefHeight="640"
+      styleClass="app-root">
+
+    <!-- SIDEBAR -->
+    <VBox styleClass="sidebar" prefWidth="210" spacing="0">
+
+        <VBox styleClass="logo-area" spacing="2">
+            <Label text="StudyTrack" styleClass="logo-title"/>
+            <Label text="Time Tracker" styleClass="logo-sub"/>
+        </VBox>
+
+        <VBox styleClass="nav-section" spacing="2">
+            <Label text="NAVIGATION" styleClass="nav-section-label"/>
+            <Button fx:id="btnDashboard" text="  Dashboard"
+                    styleClass="nav-item,nav-active" maxWidth="Infinity"
+                    onAction="#showDashboard"/>
+            <Button fx:id="btnHistory" text="  Session History"
+                    styleClass="nav-item" maxWidth="Infinity"
+                    onAction="#showHistory"/>
+            <Button fx:id="btnReports" text="  Reports"
+                    styleClass="nav-item" maxWidth="Infinity"
+                    onAction="#showReports"/>
+        </VBox>
+
+        <VBox styleClass="nav-section" spacing="8">
+            <Label text="QUICK STATS" styleClass="nav-section-label"/>
+
+            <VBox styleClass="stat-card" spacing="2">
+                <Label text="Today's Study Time" styleClass="stat-label"/>
+                <Label fx:id="lblTodayTotal" text="0h 0m" styleClass="stat-value"/>
+                <Label fx:id="lblTodaySessions" text="0 sessions" styleClass="stat-sub"/>
+            </VBox>
+
+            <VBox styleClass="stat-card" spacing="2">
+                <Label text="This Week" styleClass="stat-label"/>
+                <Label fx:id="lblWeekTotal" text="0h 0m" styleClass="stat-value"/>
+                <Label fx:id="lblWeekSessions" text="0 sessions" styleClass="stat-sub"/>
+            </VBox>
+        </VBox>
+
+        <Region VBox.vgrow="ALWAYS"/>
+
+        <VBox styleClass="nav-section">
+            <Button text="  Log out" styleClass="nav-item" maxWidth="Infinity"
+                    onAction="#logout"/>
+        </VBox>
+
+        <HBox styleClass="user-row" alignment="CENTER_LEFT" spacing="10">
+            <Label fx:id="lblAvatar" text="--" styleClass="avatar"/>
+            <VBox spacing="1">
+                <Label fx:id="lblUserName" text="" styleClass="user-name" maxWidth="130"/>
+                <Label text="Student" styleClass="user-role"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+    <!-- MAIN CONTENT -->
+    <VBox HBox.hgrow="ALWAYS" styleClass="main-area" spacing="0">
+
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="12">
+            <Label fx:id="lblPageTitle" text="Dashboard" styleClass="topbar-title"/>
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <HBox styleClass="tab-row" spacing="4">
+                <Button fx:id="tabDay" text="Daily"
+                        styleClass="tab,tab-active" onAction="#filterDaily"/>
+                <Button fx:id="tabWeek" text="Weekly"
+                        styleClass="tab" onAction="#filterWeekly"/>
+            </HBox>
+
+            <Button text="+ Add Session" styleClass="btn-primary"
+                    onAction="#openAddSessionDialog"/>
+        </HBox>
+
+        <ScrollPane fitToWidth="true" styleClass="content-scroll" VBox.vgrow="ALWAYS">
+            <VBox styleClass="content-area" spacing="16">
+                <padding>
+                    <Insets top="16" right="20" bottom="16" left="20"/>
+                </padding>
+
+                <!-- Add session form -->
+                <VBox styleClass="card" spacing="12">
+                    <Label text="New Study Session" styleClass="card-title"/>
+
+                    <GridPane hgap="12" vgap="10">
+                        <columnConstraints>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                            <ColumnConstraints hgrow="ALWAYS"/>
+                        </columnConstraints>
+
+                        <Label text="Subject" styleClass="form-label"
+                               GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                        <Label text="Start Time (HH:mm)" styleClass="form-label"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                        <Label text="End Time (HH:mm)" styleClass="form-label"
+                               GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+                        <TextField fx:id="fieldSubject" promptText="e.g. Mathematics"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                   maxWidth="Infinity"/>
+                        <TextField fx:id="fieldStart" promptText="09:00"
+                                   GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                   maxWidth="Infinity"/>
+                        <TextField fx:id="fieldEnd" promptText="11:00"
+                                   GridPane.columnIndex="2" GridPane.rowIndex="1"
+                                   maxWidth="Infinity"/>
+
+                        <Label text="Date (yyyy-MM-dd)" styleClass="form-label"
+                               GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                        <Label text="Duration (auto)" styleClass="form-label"
+                               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                        <TextField fx:id="fieldDate" promptText="2026-11-07"
+                                   GridPane.columnIndex="0" GridPane.rowIndex="3"
+                                   maxWidth="Infinity"/>
+                        <Label fx:id="lblDurationPreview" text="—"
+                               styleClass="duration-preview"
+                               GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                    </GridPane>
+
+                    <HBox spacing="8" alignment="CENTER_RIGHT">
+                        <Label fx:id="lblFormError" styleClass="error-label"
+                               wrapText="true" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                        <Button text="Clear" styleClass="btn-secondary" onAction="#clearForm"/>
+                        <Button text="Save Session" styleClass="btn-primary" onAction="#saveSession"/>
+                    </HBox>
+                </VBox>
+
+                <!-- Sessions table -->
+                <VBox styleClass="card" spacing="10">
+                    <Label fx:id="lblTableTitle" text="Today's Sessions" styleClass="card-title"/>
+
+                    <TableView fx:id="sessionTable" styleClass="session-table"
+                               prefHeight="220" minHeight="120">
+                        <columns>
+                            <TableColumn fx:id="colSubject"  text="Subject"  prefWidth="180"/>
+                            <TableColumn fx:id="colDate"     text="Date"     prefWidth="110"/>
+                            <TableColumn fx:id="colStart"    text="Start"    prefWidth="90"/>
+                            <TableColumn fx:id="colEnd"      text="End"      prefWidth="90"/>
+                            <TableColumn fx:id="colDuration" text="Duration" prefWidth="90"/>
+                            <TableColumn fx:id="colActions"  text="Actions"  prefWidth="100"/>
+                        </columns>
+                        <placeholder>
+                            <Label text="No sessions yet. Add one above."
+                                   styleClass="table-placeholder"/>
+                        </placeholder>
+                    </TableView>
+
+                    <HBox spacing="10">
+                        <VBox styleClass="summary-chip" HBox.hgrow="ALWAYS">
+                            <Label fx:id="lblChipTotal" text="0h 0m" styleClass="chip-val"/>
+                            <Label text="Total time" styleClass="chip-lbl"/>
+                        </VBox>
+                        <VBox styleClass="summary-chip" HBox.hgrow="ALWAYS">
+                            <Label fx:id="lblChipCount" text="0" styleClass="chip-val"/>
+                            <Label text="Sessions" styleClass="chip-lbl"/>
+                        </VBox>
+                        <VBox styleClass="summary-chip" HBox.hgrow="ALWAYS">
+                            <Label fx:id="lblChipAvg" text="0m" styleClass="chip-val"/>
+                            <Label text="Avg duration" styleClass="chip-lbl"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+
+            </VBox>
+        </ScrollPane>
+    </VBox>
+</HBox>
